@@ -5,17 +5,22 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
-    repoURL: https://github.com/<ORG>/<REPO>.git
+    repoURL: https://github.com/lgtmstack-pixel/Grafana.git
     targetRevision: main
     path: loki
     helm:
       valueFiles:
         - values.yaml
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: observability
+    namespace: loki
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
