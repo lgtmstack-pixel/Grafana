@@ -1,4 +1,4 @@
-replicas: 1   # IMPORTANT: only 1 replica if bound to one node
+replicas: 1   # Only one replica since it's pinned to one node
 
 image:
   repository: grafana/grafana
@@ -8,15 +8,14 @@ service:
   type: NodePort
   port: 3000
 
-# ✅ Force Grafana to run ONLY on node-1
-nodeSelector:
-  workload: grafana
+grafana:
+  nodeSelector:
+    workload: grafana
 
-# ✅ Allow scheduling on control-plane node
-tolerations:
-  - key: "node-role.kubernetes.io/control-plane"
-    operator: "Exists"
-    effect: "NoSchedule"
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
 
 resources:
   requests:
