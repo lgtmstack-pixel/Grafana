@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/lgtmstack-pixel/Grafana.git
-    path: tempo
+    path: temp
     targetRevision: main
     helm:
       valueFiles:
