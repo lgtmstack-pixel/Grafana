@@ -1,0 +1,41 @@
+replicas: 1   # IMPORTANT: only 1 replica if bound to one node
+
+image:
+  repository: grafana/grafana
+  tag: 10.4.2
+
+service:
+  type: NodePort
+  port: 3000
+
+# ✅ Force Grafana to run ONLY on node-1
+nodeSelector:
+  workload: grafana
+
+# ✅ Allow scheduling on control-plane node
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClassName: ""
+
+adminUser: admin
+adminPassword: admin123
+
+grafana.ini:
+  server:
+    root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
+  security:
+    allow_embedding: true
