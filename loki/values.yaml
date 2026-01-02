@@ -1,6 +1,6 @@
 # values.yaml for Loki Helm chart
 
-# Force Loki to run only on Node-2
+# Schedule Loki pods only on nodes with this label
 nodeSelector:
   workload: loki-tempo
 
@@ -60,11 +60,11 @@ loki:
         local:
           directory: /var/loki/rules
 
-# Single binary mode for small cluster
+# Run Loki in single-binary mode
 singleBinary:
   replicas: 1
 
-# CPU tuning for 2 vCPU node
+# CPU tuning for a 2 vCPU node
 resources:
   requests:
     cpu: "300m"
