@@ -1,19 +1,30 @@
+# values.yaml for Loki Helm chart
+
 # Force Loki to run only on Node-2
 nodeSelector:
   workload: loki-tempo
 
 loki:
+  # Disable auth for simplicity
   auth_enabled: false
+
+  # Common config for replication
   commonConfig:
     replication_factor: 1
 
-  # Loki configuration must be a string
+  # Loki configuration must be a string block
   config: |
+    server:
+      http_listen_port: 3100
+
     ingester:
       wal:
         enabled: true
+
     limits_config:
       ingestion_rate_mb: 10
+      ingestion_burst_size_mb: 20
+
     schema_config:
       configs:
         - from: 2020-10-24
@@ -23,6 +34,24 @@ loki:
           index:
             prefix: index_
             period: 24h
+
+    storage_config:
+      boltdb_shipper:
+        active_index_directory: /var/loki/index
+        cache_location: /var/loki/cache
+        shared_store: filesystem
+      filesystem:
+        directory: /var/loki/chunks
+
+    compactor:
+      working_directory: /var/loki/compactor
+      shared_store: filesystem
+
+    ruler:
+      storage:
+        type: local
+        local:
+          directory: /var/loki/rules
 
 # Single binary mode for small cluster
 singleBinary:
