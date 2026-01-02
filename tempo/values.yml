@@ -1,0 +1,51 @@
+# values.yaml for Tempo Helm chart
+
+nodeSelector:
+  workload: loki-tempo
+
+tempo:
+  auth_enabled: false
+
+  storage:
+    trace:
+      backend: local
+      local:
+        path: /var/tempo/traces
+
+  config: |
+    server:
+      http_listen_port: 3200
+
+    distributor:
+      receivers:
+        jaeger:
+          protocols:
+            thrift_http:
+            grpc
+        otlp:
+          protocols:
+            grpc
+            http
+
+    ingester:
+      wal:
+        enabled: true
+
+    compactor:
+      compaction:
+        block_retention: 24h
+
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+
+singleBinary:
+  replicas: 1
+
+resources:
+  requests:
+    cpu: "300m"
+  limits:
+    cpu: "1"
