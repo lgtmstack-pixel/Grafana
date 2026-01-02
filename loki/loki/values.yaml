@@ -1,0 +1,19 @@
+# Force Loki to run only on Node-2
+nodeSelector:
+  workload: loki-tempo
+
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+
+# Single binary mode for small cluster
+singleBinary:
+  replicas: 1
+
+# CPU tuning for 2 vCPU node
+resources:
+  requests:
+    cpu: "300m"
+  limits:
+    cpu: "1"
