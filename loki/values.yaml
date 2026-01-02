@@ -12,6 +12,13 @@ loki:
   commonConfig:
     replication_factor: 1
 
+  # Storage bucket names required by chart helpers
+  storage:
+    bucketNames:
+      chunks: loki-chunks
+      ruler: loki-ruler
+      admin: loki-admin
+
   # Loki configuration must be a string block
   config: |
     server:
