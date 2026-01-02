@@ -1,25 +1,19 @@
-# values.yaml for Loki Helm chart
-
-# Schedule Loki pods only on nodes with this label
-nodeSelector:
-  workload: loki-tempo
-
 loki:
-  # Disable auth for simplicity
   auth_enabled: false
+
+  # Top-level storage for chart helpers
+  storage:
+    bucketNames:
+      chunks: loki-chunks
+      index: loki-index
+      ruler: loki-ruler
+      admin: loki-admin
 
   # Common config for replication
   commonConfig:
     replication_factor: 1
 
-  # Storage bucket names required by chart helpers
-  storage:
-    bucketNames:
-      chunks: loki-chunks
-      ruler: loki-ruler
-      admin: loki-admin
-
-  # Loki configuration must be a string block
+  # Loki configuration string
   config: |
     server:
       http_listen_port: 3100
@@ -59,14 +53,3 @@ loki:
         type: local
         local:
           directory: /var/loki/rules
-
-# Run Loki in single-binary mode
-singleBinary:
-  replicas: 1
-
-# CPU tuning for a 2 vCPU node
-resources:
-  requests:
-    cpu: "300m"
-  limits:
-    cpu: "1"
