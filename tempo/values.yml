@@ -27,9 +27,7 @@ tempo:
             grpc: {}
             http: {}
 
-    ingester:
-      wal:
-        enabled: true
+    ingester: {}   # no WAL here, leave empty or remove entirely
 
     compactor:
       compaction:
