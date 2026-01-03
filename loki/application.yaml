@@ -5,46 +5,25 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
-    repoURL: https://github.com/lgtmstack-pixel/Grafana  # Official Helm repo
-    chart: loki
-    targetRevision: 6.33.0  # Stable version without the error
+    repoURL: https://github.com/lgtmstack-pixel/Grafana
+    targetRevision: main
+    path: loki
     helm:
-      releaseName: loki
-      valueFiles: []
-      values: |  # Inline values for simplicity, or use separate file by changing repoURL to your Git
-        deploymentMode: Monolithic
-        minio:
-          enabled: false
-        loki:
-          auth_enabled: false
-          storage:
-            type: filesystem
-          schemaConfig:
-            configs:
-              - from: 2020-01-01
-                store: tsdb
-                object_store: filesystem
-                schema: v13
-                index:
-                  prefix: loki_index_
-                  period: 24h
-        monolithic:
-          enabled: true
-          replicas: 1
-          persistence:
-            enabled: true
-            size: 10Gi
-            storageClassName: local-path
-          service:
-            type: ClusterIP
-            port: 3100
+      valueFiles:
+        - values.yaml
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: logging
+    namespace: loki
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+
