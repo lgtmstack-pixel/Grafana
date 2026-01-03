@@ -14,7 +14,7 @@ spec:
       chart: loki
       repoURL: https://grafana.github.io/helm-charts
       valueFiles:
-        - loki-values.yaml
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
