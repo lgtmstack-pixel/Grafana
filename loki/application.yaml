@@ -10,11 +10,6 @@ spec:
     repoURL: https://github.com/lgtmstack-pixel/Grafana.git
     targetRevision: main
     path: loki
-    helm:
-      chart: loki
-      repoURL: https://grafana.github.io/helm-charts
-      valueFiles:
-        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
