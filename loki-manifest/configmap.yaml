@@ -11,10 +11,14 @@ data:
       http_listen_port: 3100
       grpc_listen_port: 9095
 
+    # 🔴 FORCE SINGLE BINARY MODE
+    target: all
+
     common:
       replication_factor: 1
       path_prefix: /var/loki
 
+    # 🔴 FORCE MEMBERLIST (NO CONSUL)
     memberlist:
       join_members: []
 
@@ -25,6 +29,27 @@ data:
             store: memberlist
           replication_factor: 1
         final_sleep: 0s
+
+    querier:
+      engine:
+        timeout: 5m
+
+    # 🔴 DISABLE QUERY SCHEDULER COMPLETELY
+    query_scheduler:
+      enabled: false
+
+    frontend:
+      compress_responses: true
+
+    # 🔴 DISABLE DISTRIBUTED FEATURES
+    distributor:
+      ring:
+        kvstore:
+          store: memberlist
+
+    compactor:
+      working_directory: /var/loki/compactor
+      shared_store: filesystem
 
     schema_config:
       configs:
@@ -44,7 +69,4 @@ data:
       allow_structured_metadata: true
 
     ruler:
-      storage:
-        type: local
-        local:
-          directory: /var/loki/rules
+      enabled: false
