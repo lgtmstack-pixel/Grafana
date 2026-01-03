@@ -1,13 +1,17 @@
 loki:
   enabled: true
 
+  auth_enabled: false
+
   commonConfig:
     replication_factor: 1
 
-  auth_enabled: false
-
   storage:
     type: filesystem
+    bucketNames:
+      chunks: loki-chunks
+      ruler: loki-ruler
+      admin: loki-admin
 
   persistence:
     enabled: true
