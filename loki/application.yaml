@@ -8,34 +8,41 @@ spec:
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: loki
-    targetRevision: 6.7.1  # Update to latest if possible (e.g., 6.18.0) to avoid known bugs
+    targetRevision: 6.49.0  # Latest stable version
     helm:
       releaseName: loki
       values: |
-        deploymentMode: Monolithic
-        monolithic:
-          enabled: true
-          replicas: 1
-          persistence:
-            enabled: true
-            size: 10Gi
-            storageClassName: "local-path"
-          service:
-            type: ClusterIP
-            port: 3100
+        deploymentMode: SingleBinary
+        minio:
+          enabled: true  # Enables local S3-compatible storage to avoid nil errors
         loki:
           auth_enabled: false
-          storage:
-            type: filesystem
+          commonConfig:
+            replication_factor: 1
           schemaConfig:
             configs:
-              - from: 2024-01-01  # Adjust 'from' date to before your expected logs (e.g., 2020-01-01 for testing)
+              - from: 2024-01-01  # Adjust to before your log dates
                 store: tsdb
-                object_store: filesystem
+                object_store: s3  # Use s3 with MinIO
                 schema: v13
                 index:
                   prefix: loki_index_
                   period: 24h
+          storage:
+            type: s3  # Compatible with MinIO
+        singleBinary:
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 10Gi
+            storageClassName: ""
+        # Zero out other modes for pure single binary
+        backend:
+          replicas: 0
+        read:
+          replicas: 0
+        write:
+          replicas: 0
   destination:
     server: https://kubernetes.default.svc
     namespace: logging
