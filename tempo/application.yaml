@@ -13,11 +13,15 @@ spec:
     chart: tempo
     targetRevision: 1.9.0
     helm:
-      valueFiles:
-        - values.yaml
+      values: |
+        persistence:
+          enabled: false
+        service:
+          type: ClusterIP
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
