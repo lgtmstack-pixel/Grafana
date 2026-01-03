@@ -13,6 +13,7 @@ spec:
     helm:
       chart: loki
       repoURL: https://grafana.github.io/helm-charts
+      version: "5.3.0"
       valueFiles:
         - values.yaml
 
@@ -25,7 +26,8 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-     - CreateNamespace=true
+      - CreateNamespace=true
+
 
 
 
