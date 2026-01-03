@@ -20,12 +20,12 @@ tempo:
       receivers:
         jaeger:
           protocols:
-            thrift_http:
-            grpc
+            thrift_http: {}
+            grpc: {}
         otlp:
           protocols:
-            grpc
-            http
+            grpc: {}
+            http: {}
 
     ingester:
       wal:
