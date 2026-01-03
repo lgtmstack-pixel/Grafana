@@ -2,13 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: loki
-  namespace: argocd  # Namespace where ArgoCD is installed
+  namespace: argocd
 spec:
-  project: default  # Or your custom project
+  project: default
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: loki
-    targetRevision: 6.7.1  # Replace with latest version from https://artifacthub.io/packages/helm/grafana/loki
+    targetRevision: 6.7.1
     helm:
       releaseName: loki
       values: |
@@ -19,22 +19,26 @@ spec:
           persistence:
             enabled: true
             size: 10Gi
-            storageClassName: "local-path"  # Uses your cluster's default storage class
+            storageClassName: ""
           service:
             type: ClusterIP
             port: 3100
         loki:
-          auth_enabled: false  # Disable for basic setup; enable for production
+          auth_enabled: false
           commonConfig:
             replication_factor: 1
           storage:
-            type: filesystem  # Simple filesystem; change to 's3' for production
+            type: filesystem
+            bucketNames:  # Add this to avoid nil pointer in template
+              chunks: loki-chunks
+              ruler: loki-ruler
+              admin: loki-admin
   destination:
     server: https://kubernetes.default.svc
-    namespace: logging  # Namespace for Loki deployment
+    namespace: logging
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true  # Auto-create the namespace if it doesn't exist
+      - CreateNamespace=true
