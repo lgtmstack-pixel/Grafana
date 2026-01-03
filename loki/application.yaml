@@ -12,31 +12,33 @@ spec:
     helm:
       releaseName: loki
       values: |
-        deploymentMode: SingleBinary
+        deploymentMode: SingleBinary  # Monolithic mode
         minio:
-          enabled: true  # Enables local S3-compatible storage to avoid nil errors
+          enabled: false  # Explicitly disable MinIO
         loki:
           auth_enabled: false
-          commonConfig:
-            replication_factor: 1
+          storage:
+            type: filesystem
+            bucketNames:  # Dummy values to avoid nil pointer template error
+              chunks: dummy-chunks
+              ruler: dummy-ruler
+              admin: dummy-admin
           schemaConfig:
             configs:
-              - from: 2024-01-01  # Adjust to before your log dates
+              - from: 2020-01-01  # Use a date far in the past to cover all possible logs
                 store: tsdb
-                object_store: s3  # Use s3 with MinIO
+                object_store: filesystem
                 schema: v13
                 index:
                   prefix: loki_index_
                   period: 24h
-          storage:
-            type: s3  # Compatible with MinIO
         singleBinary:
           replicas: 1
           persistence:
             enabled: true
-            size: 10Gi
-            storageClassName: ""
-        # Zero out other modes for pure single binary
+            size: 10Gi  # Matches your existing PVC size; adjust if needed
+            storageClassName: local-path  # Matches your PVC's storage class
+        # Ensure no scalable components are deployed
         backend:
           replicas: 0
         read:
@@ -45,7 +47,7 @@ spec:
           replicas: 0
   destination:
     server: https://kubernetes.default.svc
-    namespace: logging
+    namespace: loki
   syncPolicy:
     automated:
       prune: true
