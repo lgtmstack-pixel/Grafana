@@ -14,8 +14,8 @@ spec:
       valueFiles:
         - values.yaml
       parameters:
-        - name: global.namespace
-          value: logging
+        - name: namespaceOverride
+          value: loki
 
   destination:
     server: https://kubernetes.default.svc
