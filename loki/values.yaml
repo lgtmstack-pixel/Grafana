@@ -7,6 +7,8 @@ loki:
     commonConfig:
       replication_factor: 1
 
+    deploymentMode: SingleBinary
+
     storage:
       type: filesystem
       bucketNames:
@@ -18,12 +20,6 @@ loki:
       enabled: true
       size: 20Gi
 
-    nodeSelector:
-      kubernetes.io/hostname: k8s-node2
-
-    tolerations:
-      - operator: Exists
-
     singleBinary:
       replicas: 1
 
@@ -32,6 +28,13 @@ loki:
 
       tolerations:
         - operator: Exists
+
+    read:
+      enabled: false
+    write:
+      enabled: false
+    backend:
+      enabled: false
 
     resources:
       requests:
