@@ -1,3 +1,5 @@
+
+# application.yaml (Git-hosted chart)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -9,11 +11,9 @@ spec:
   source:
     repoURL: https://github.com/lgtmstack-pixel/Grafana.git
     targetRevision: main
-    path: loki
+    path: loki       # folder containing Chart.yaml and values.yaml
     helm:
-      chart: loki
-      repoURL: https://grafana.github.io/helm-charts
-      version: "5.3.0"
+      releaseName: loki
       valueFiles:
         - values.yaml
 
@@ -27,6 +27,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+
 
 
 
