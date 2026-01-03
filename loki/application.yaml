@@ -1,79 +1,40 @@
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: loki
-  namespace: argocd
+  namespace: argocd  # Namespace where ArgoCD is installed
 spec:
-  project: default
-
+  project: default  # Or your custom project
   source:
-    chart: loki
     repoURL: https://grafana.github.io/helm-charts
-    targetRevision: "5.3.0"   # Helm chart version
+    chart: loki
+    targetRevision: 6.7.1  # Replace with latest version from https://artifacthub.io/packages/helm/grafana/loki
     helm:
       releaseName: loki
-      skipCrds: true           # avoid rendering CRDs such as ServiceMonitor
-      valuesObject:
-        # Loki core: single-binary, filesystem, single replica
-        loki:
-          commonConfig:
-            replication_factor: 1            # required for single-replica [2](https://gitlab.ibcs-primax.com/grafana/loki/-/blob/992ac7a3b0d459805096d042d232bca85c97904f/docs/sources/installation/helm/install-monolithic/index.md)
-          storage:
-            type: filesystem                 # monolithic, no object storage [2](https://gitlab.ibcs-primax.com/grafana/loki/-/blob/992ac7a3b0d459805096d042d232bca85c97904f/docs/sources/installation/helm/install-monolithic/index.md)
-
-        deploymentMode: SingleBinary         # force monolithic mode [1](https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/)
-
-        singleBinary:
-          replicas: 1
-          nodeSelector:
-            kubernetes.io/hostname: k8s-node2
-          tolerations:
-            - operator: Exists
-
-        # Zero out all microservice/scale-out components (prevents their resources from rendering)
-        backend:          { replicas: 0 }
-        read:             { replicas: 0 }
-        write:            { replicas: 0 }
-        ingester:         { replicas: 0 }
-        querier:          { replicas: 0 }
-        queryFrontend:    { replicas: 0 }
-        queryScheduler:   { replicas: 0 }
-        distributor:      { replicas: 0 }
-        compactor:        { replicas: 0 }
-        indexGateway:     { replicas: 0 }
-        bloomCompactor:   { replicas: 0 }
-        bloomGateway:     { replicas: 0 }
-
-        # Minimal extras: all disabled
-        gateway:          { enabled: false }
-        canary:           { enabled: false }
-        selfMonitoring:   { enabled: false }   # prevents ServiceMonitor/Prometheus rules [1](https://grafana.com/docs/loki/latest/setup/install/helm/install-monolithic/)
-        serviceMonitor:   { enabled: false }   # belt & suspenders [5](https://grafana.com/docs/loki/latest/setup/install/helm/reference/)
-        grafanaAgent:
-          enabled: false
-          installOperator: false               # avoid Grafana Agent Operator + its CRDs [3](https://gitmemories.com/grafana/loki/issues/7488)
-
-        # Storage/resource sizing
-        persistence:
+      values: |
+        deploymentMode: Monolithic
+        monolithic:
           enabled: true
-          size: 20Gi
-        resources:
-          requests:
-            cpu: 200m
-            memory: 512Mi
-          limits:
-            cpu: 500m
-            memory: 1Gi
-
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 10Gi
+            storageClassName: "local-path"  # Uses your cluster's default storage class
+          service:
+            type: ClusterIP
+            port: 3100
+        loki:
+          auth_enabled: false  # Disable for basic setup; enable for production
+          commonConfig:
+            replication_factor: 1
+          storage:
+            type: filesystem  # Simple filesystem; change to 's3' for production
   destination:
     server: https://kubernetes.default.svc
-    namespace: loki
-
+    namespace: logging  # Namespace for Loki deployment
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true                  # auto-create 'loki' namespace [4](https://argo-cd.readthedocs.io/en/stable/user-guide/helm/)[6](https://stackoverflow.com/questions/78787038/how-to-set-helm-argument-create-namespace-in-argocd-applications-definition)
-
+      - CreateNamespace=true  # Auto-create the namespace if it doesn't exist
