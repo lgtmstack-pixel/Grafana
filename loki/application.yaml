@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/yourusername/k8s-gitops.git  # Your Git repo
+    repoURL: https://github.com/lgtmstack-pixel/Grafana  # Your Git repo
     targetRevision: main  # Or your branch
     path: loki  # Directory containing application.yaml and values.yaml
     helm:
