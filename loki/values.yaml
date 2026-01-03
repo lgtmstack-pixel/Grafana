@@ -1,43 +1,17 @@
-
-# Run Loki as a single-binary instance with one replica
-loki:
-  auth_enabled: false
-
-singleBinary:
+deploymentMode: Monolithic
+monolithic:
   enabled: true
   replicas: 1
-  nodeSelector:
-    kubernetes.io/hostname: k8s-node2
-  tolerations:
-    - operator: Exists
-
-# (optional) basic persistent storage so data survives pod restarts
-persistence:
-  enabled: true
-  size: 20Gi
-  # storageClass: <your-storageclass>   # uncomment and set if needed
-
-# Keep resource requests modest for a single node
-resources:
-  requests:
-    cpu: 200m
-    memory: 512Mi
-  limits:
-    cpu: 500m
-    memory: 1Gi
-
-# Disable extras to keep it minimal
-canary:
-  enabled: false
-
-gateway:
-  enabled: false
-
-grafanaAgent:
-  enabled: false
-
-grafanaAgentOperator:
-  enabled: false
-
-serviceMonitor:
-  enabled: false
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: ""  # Blank uses default; specify if needed (e.g., "standard")
+  service:
+    type: ClusterIP
+    port: 3100
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: filesystem
