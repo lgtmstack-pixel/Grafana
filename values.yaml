@@ -4,18 +4,17 @@ image:
   repository: grafana/grafana
   tag: 10.4.2
 
-grafana:
-  service:
-    type: NodePort
-    port: 3000
+service:
+  type: NodePort
+  port: 3000
 
-  nodeSelector:
-    workload: grafana
+nodeSelector:
+  workload: grafana
 
-  tolerations:
-    - key: "node-role.kubernetes.io/control-plane"
-      operator: "Exists"
-      effect: "NoSchedule"
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
 
 resources:
   requests:
