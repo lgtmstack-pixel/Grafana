@@ -1,20 +1,33 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tempo
+  name: loki
   namespace: argocd
 spec:
   project: default
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: tempo
+
   source:
     repoURL: https://github.com/lgtmstack-pixel/Grafana
-    targetRevision: main        # or master, confirm your branch name
-    path: tempo                 # folder with Chart.yaml + values.yaml
+    targetRevision: main
+    path: loki
+    helm:
+      valueFiles:
+        - values.yaml
+      releaseName: loki
+      # 🔴 CRITICAL FIX
+      skipCrds: true
+      enableHelmHooks: false
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: loki
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+
