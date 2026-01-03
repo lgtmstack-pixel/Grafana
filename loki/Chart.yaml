@@ -1,0 +1,11 @@
+apiVersion: v2
+name: loki-fs
+description: Wrapper chart to deploy Grafana Loki in SingleBinary mode using filesystem storage (no object storage).
+type: application
+version: 0.1.0
+appVersion: "6.49.0"
+
+dependencies:
+  - name: loki
+    version: "6.49.0"
+    repository: "https://grafana.github.io/helm-charts"
