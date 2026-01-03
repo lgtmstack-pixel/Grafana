@@ -1,4 +1,5 @@
 deploymentMode: SingleBinary
+
 minio:
   enabled: false
 
@@ -6,13 +7,13 @@ loki:
   auth_enabled: false
   storage:
     type: filesystem
-    bucketNames:  # Dummy values required by chart templates (ignored for filesystem)
-      chunks: dummy-chunks
-      ruler: dummy-ruler
-      admin: dummy-admin
+    bucketNames:  # REQUIRED: Define these (any strings; ignored for filesystem)
+      chunks: chunks
+      ruler: ruler
+      admin: admin
   schemaConfig:
     configs:
-      - from: 2020-01-01  # Safe past date to cover any logs
+      - from: 2020-01-01
         store: tsdb
         object_store: filesystem
         schema: v13
@@ -25,12 +26,30 @@ singleBinary:
   persistence:
     enabled: true
     size: 10Gi
-    storageClassName: local-path  # Your cluster's storage class
+    storageClassName: local-path
 
-# Disable scalable components (ensures pure single binary mode)
+# Disable all other components
 backend:
   replicas: 0
 read:
   replicas: 0
 write:
+  replicas: 0
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+distributor:
+  replicas: 0
+compactor:
+  replicas: 0
+indexGateway:
+  replicas: 0
+bloomCompactor:
+  replicas: 0
+bloomGateway:
   replicas: 0
