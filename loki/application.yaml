@@ -9,18 +9,18 @@ spec:
   source:
     repoURL: https://github.com/lgtmstack-pixel/Grafana.git
     targetRevision: main
-    path: loki
+    path: values
     helm:
+      chart: loki
+      repoURL: https://grafana.github.io/helm-charts
       valueFiles:
-        - values.yaml
+        - loki-values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: loki
+    namespace: logging
 
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
