@@ -1,11 +1,11 @@
+deploymentMode: SingleBinary
+
 loki:
-  # Single replica => MUST be 1 or you can get write/read issues
+  auth_enabled: false
+
   commonConfig:
     replication_factor: 1
 
-  auth_enabled: false
-
-  # Use TSDB schema + filesystem object store
   schemaConfig:
     configs:
       - from: "2024-04-01"
@@ -16,59 +16,55 @@ loki:
           prefix: loki_index_
           period: 24h
 
-  # Helm chart storage abstraction: set to filesystem (no s3/gcs/azure buckets)
   storage:
     type: filesystem
+
+    # REQUIRED to satisfy Helm validation even though unused
+    bucketNames:
+      chunks: ""
+      ruler: ""
+      admin: ""
+
     filesystem:
       chunks_directory: /var/loki/chunks
       rules_directory: /var/loki/rules
-
-  # Optional but commonly helpful for retention cleanup when using TSDB
-  compactor:
-    retention_enabled: true
 
   limits_config:
     allow_structured_metadata: true
     volume_enabled: true
 
-deploymentMode: SingleBinary
-
 singleBinary:
   replicas: 1
 
-  # Persist filesystem data via PVC (recommended; otherwise node/local disk loss on reschedule)
   persistence:
     enabled: true
     size: 10Gi
-    # storageClass: "YOUR_STORAGE_CLASS"  # uncomment if you want to force a class
 
-# Ensure we are NOT deploying scalable/distributed components
-backend:
-  replicas: 0
-read:
-  replicas: 0
+# 🔴 HARD DISABLE ALL DISTRIBUTED COMPONENTS
 write:
-  replicas: 0
+  enabled: false
+read:
+  enabled: false
+backend:
+  enabled: false
 
 ingester:
-  replicas: 0
-querier:
-  replicas: 0
-queryFrontend:
-  replicas: 0
-queryScheduler:
-  replicas: 0
+  enabled: false
 distributor:
-  replicas: 0
-compactor:
-  replicas: 0
+  enabled: false
+querier:
+  enabled: false
+queryFrontend:
+  enabled: false
+queryScheduler:
+  enabled: false
 indexGateway:
-  replicas: 0
-bloomCompactor:
-  replicas: 0
-bloomGateway:
-  replicas: 0
+  enabled: false
+compactor:
+  enabled: false
+ruler:
+  enabled: false
 
-# Explicitly disable bundled MinIO (no object storage)
+# Disable bundled MinIO
 minio:
   enabled: false
