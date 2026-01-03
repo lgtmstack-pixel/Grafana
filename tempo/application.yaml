@@ -9,19 +9,12 @@ spec:
     server: https://kubernetes.default.svc
     namespace: tempo
   source:
-    repoURL: https://grafana.github.io/helm-charts
-    chart: tempo
-    targetRevision: 1.9.0
-    helm:
-      values: |
-        persistence:
-          enabled: false
-        service:
-          type: ClusterIP
+    repoURL: https://github.com/lgtmstack-pixel/Grafana.git
+    targetRevision: main
+    path: tempo
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-
