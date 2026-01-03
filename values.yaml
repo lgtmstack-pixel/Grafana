@@ -28,7 +28,6 @@ grafana:
   persistence:
     enabled: true
     size: 10Gi
-    storageClassName: ""
 
   admin:
     existingSecret: grafana-admin-secret
