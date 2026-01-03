@@ -1,0 +1,56 @@
+daemonset:
+  enabled: true
+
+# Run on ALL nodes including control-plane
+tolerations:
+  - operator: "Exists"
+
+# No nodeSelector → all nodes
+nodeSelector: {}
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
+
+config:
+  clients:
+    - url: http://loki.loki.svc.cluster.local:3100/loki/api/v1/push
+      # 🔴 We will deploy Loki next; this DNS will work then
+
+  positions:
+    filename: /run/promtail/positions.yaml
+
+  scrape_configs:
+    # --- Kubernetes pod logs ---
+    - job_name: kubernetes-pods
+      pipeline_stages:
+        - cri: {}
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_node_name]
+          target_label: node
+        - source_labels: [__meta_kubernetes_namespace]
+          target_label: namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          target_label: pod
+        - source_labels: [__meta_kubernetes_container_name]
+          target_label: container
+        - action: replace
+          source_labels: [__meta_kubernetes_pod_uid, __meta_kubernetes_container_name]
+          separator: /
+          target_label: __path__
+          replacement: /var/log/pods/*$1/*.log
+
+    # --- Node system logs ---
+    - job_name: varlogs
+      static_configs:
+        - targets:
+            - localhost
+          labels:
+            job: varlogs
+            __path__: /var/log/*log
