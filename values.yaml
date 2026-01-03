@@ -1,41 +1,42 @@
-replicas: 1
+grafana:
+  replicas: 1
 
-image:
-  repository: grafana/grafana
-  tag: 10.4.2
+  image:
+    repository: grafana/grafana
+    tag: 10.4.2
 
-service:
-  type: NodePort
-  port: 3000
+  service:
+    type: NodePort
+    port: 3000
 
-nodeSelector:
-  workload: grafana
+  nodeSelector:
+    workload: grafana
 
-tolerations:
-  - key: "node-role.kubernetes.io/control-plane"
-    operator: "Exists"
-    effect: "NoSchedule"
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
 
-resources:
-  requests:
-    cpu: 200m
-    memory: 512Mi
-  limits:
-    cpu: 500m
-    memory: 1Gi
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
 
-persistence:
-  enabled: true
-  size: 10Gi
-  storageClassName: ""
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: ""
 
-admin:
-  existingSecret: grafana-admin-secret
-  userKey: admin-user
-  passwordKey: admin-password
+  admin:
+    existingSecret: grafana-admin-secret
+    userKey: admin-user
+    passwordKey: admin-password
 
-grafana.ini:
-  server:
-    root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
-  security:
-    allow_embedding: true
+  grafana.ini:
+    server:
+      root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
+    security:
+      allow_embedding: true
