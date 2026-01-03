@@ -20,3 +20,20 @@ resources:
   limits:
     cpu: 500m
     memory: 1Gi
+
+gateway:
+  enabled: false
+
+canary:
+  enabled: false
+
+serviceMonitor:
+  enabled: false
+
+# ---- Grafana Agent Operator (ENABLED as requested) ----
+
+grafanaAgent:
+  enabled: true
+
+grafanaAgentOperator:
+  enabled: true
