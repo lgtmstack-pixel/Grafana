@@ -15,27 +15,6 @@ promtail:
       cpu: 300m
       memory: 256Mi
 
-  extraVolumes:
-    - name: varlog
-      hostPath:
-        path: /var/log
-    - name: pods
-      hostPath:
-        path: /var/log/pods
-    - name: run
-      hostPath:
-        path: /run/promtail
-
-  extraVolumeMounts:
-    - name: varlog
-      mountPath: /var/log
-      readOnly: true
-    - name: pods
-      mountPath: /var/log/pods
-      readOnly: true
-    - name: run
-      mountPath: /run/promtail
-
   config:
     clients:
       - url: http://loki.loki.svc.cluster.local:3100/loki/api/v1/push
