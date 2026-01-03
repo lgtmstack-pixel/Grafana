@@ -1,55 +1,38 @@
 loki:
-  auth_enabled: false
+  enabled: true
 
-  # Top-level storage for chart helpers
-  storage:
-    bucketNames:
-      chunks: loki-chunks
-      index: loki-index
-      ruler: loki-ruler
-      admin: loki-admin
-
-  # Common config for replication
   commonConfig:
     replication_factor: 1
 
-  # Loki configuration string
-  config: |
-    server:
-      http_listen_port: 3100
+  auth_enabled: false
 
-    ingester:
-      wal:
-        enabled: true
+  storage:
+    type: filesystem
 
-    limits_config:
-      ingestion_rate_mb: 10
-      ingestion_burst_size_mb: 20
+  persistence:
+    enabled: true
+    size: 20Gi
 
-    schema_config:
-      configs:
-        - from: 2020-10-24
-          store: boltdb-shipper
-          object_store: filesystem
-          schema: v11
-          index:
-            prefix: index_
-            period: 24h
+  nodeSelector:
+    kubernetes.io/hostname: k8s-node2
 
-    storage_config:
-      boltdb_shipper:
-        active_index_directory: /var/loki/index
-        cache_location: /var/loki/cache
-        shared_store: filesystem
-      filesystem:
-        directory: /var/loki/chunks
+  tolerations:
+    - operator: Exists
 
-    compactor:
-      working_directory: /var/loki/compactor
-      shared_store: filesystem
+singleBinary:
+  replicas: 1
 
-    ruler:
-      storage:
-        type: local
-        local:
-          directory: /var/loki/rules
+  nodeSelector:
+    kubernetes.io/hostname: k8s-node2
+
+  tolerations:
+    - operator: Exists
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
