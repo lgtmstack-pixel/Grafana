@@ -2,7 +2,6 @@ promtail:
   daemonset:
     enabled: true
 
-  # Run on ALL nodes including control-plane
   tolerations:
     - operator: "Exists"
 
@@ -15,6 +14,27 @@ promtail:
     limits:
       cpu: 300m
       memory: 256Mi
+
+  extraVolumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+    - name: pods
+      hostPath:
+        path: /var/log/pods
+    - name: run
+      hostPath:
+        path: /run/promtail
+
+  extraVolumeMounts:
+    - name: varlog
+      mountPath: /var/log
+      readOnly: true
+    - name: pods
+      mountPath: /var/log/pods
+      readOnly: true
+    - name: run
+      mountPath: /run/promtail
 
   config:
     clients:
