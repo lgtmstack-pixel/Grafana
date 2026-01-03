@@ -1,18 +1,23 @@
+
+# Run Loki as a single-binary instance with one replica
 loki:
   auth_enabled: false
 
-  singleBinary:
-    enabled: true
-    replicas: 1
-    nodeSelector:
-      kubernetes.io/hostname: k8s-node2
-    tolerations:
-      - operator: Exists
+singleBinary:
+  enabled: true
+  replicas: 1
+  nodeSelector:
+    kubernetes.io/hostname: k8s-node2
+  tolerations:
+    - operator: Exists
 
+# (optional) basic persistent storage so data survives pod restarts
 persistence:
   enabled: true
   size: 20Gi
+  # storageClass: <your-storageclass>   # uncomment and set if needed
 
+# Keep resource requests modest for a single node
 resources:
   requests:
     cpu: 200m
@@ -21,6 +26,7 @@ resources:
     cpu: 500m
     memory: 1Gi
 
+# Disable extras to keep it minimal
 canary:
   enabled: false
 
