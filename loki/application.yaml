@@ -6,15 +6,19 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: https://github.com/lgtmstack-pixel/Grafana.git
-    targetRevision: main
-    path: loki
-    helm:
+  sources:
+    # Source 1: Loki Helm chart
+    - repoURL: https://grafana.github.io/helm-charts
       chart: loki
-      repoURL: https://grafana.github.io/helm-charts
-      valueFiles:
-        - values.yaml
+      targetRevision: 6.6.2
+      helm:
+        valueFiles:
+          - $values/loki/values.yaml
+
+    # Source 2: Git repo containing values.yaml
+    - repoURL: https://github.com/lgtmstack-pixel/Grafana.git
+      targetRevision: main
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
@@ -24,4 +28,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+
 
