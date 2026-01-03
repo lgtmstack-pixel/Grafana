@@ -53,9 +53,47 @@ indexGateway:
   replicas: 0
 compactor:
   replicas: 0
-ruler:
-  enabled: false
 
 minio:
   enabled: false
+
+# --- HARD DISABLE GRAFANA AGENT / MONITORING ---
+monitoring:
+  enabled: false
+
+grafanaAgent:
+  enabled: false
+
+grafana-agent-operator:
+  enabled: false
+
+agent:
+  enabled: false
+
+metricsInstance:
+  enabled: false
+
+# --- HARD DISABLE QUERY SCHEDULER DISCOVERY ---
+queryScheduler:
+  enabled: false
+
+querySchedulerDiscovery:
+  enabled: false
+
+# --- ENSURE NO DISTRIBUTED SERVICES ---
+distributor:
+  enabled: false
+ingester:
+  enabled: false
+querier:
+  enabled: false
+queryFrontend:
+  enabled: false
+indexGateway:
+  enabled: false
+compactor:
+  enabled: false
+ruler:
+  enabled: false
+
 
