@@ -5,7 +5,7 @@ monolithic:
   persistence:
     enabled: true
     size: 10Gi
-    storageClassName: ""  # Blank uses default; specify if needed (e.g., "standard")
+    storageClassName: ""
   service:
     type: ClusterIP
     port: 3100
@@ -15,3 +15,7 @@ loki:
     replication_factor: 1
   storage:
     type: filesystem
+    bucketNames:  # Add this to avoid nil pointer in template
+      chunks: loki-chunks
+      ruler: loki-ruler
+      admin: loki-admin
