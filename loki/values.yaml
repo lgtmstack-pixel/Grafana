@@ -7,8 +7,8 @@ loki:
   auth_enabled: false
   storage:
     type: filesystem
-    bucketNames:  # REQUIRED: Define these (any strings; ignored for filesystem)
-      chunks: chunks
+    bucketNames:
+      chunks: chunks  # Any non-empty string works (e.g., "loki-chunks")
       ruler: ruler
       admin: admin
   schemaConfig:
@@ -28,7 +28,7 @@ singleBinary:
     size: 10Gi
     storageClassName: local-path
 
-# Disable all other components
+# Disable all other components for pure SingleBinary mode
 backend:
   replicas: 0
 read:
