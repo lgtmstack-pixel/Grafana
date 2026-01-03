@@ -4,18 +4,20 @@ metadata:
   name: tempo
   namespace: argocd
 spec:
+  project: default
   destination:
-    namespace: tempo
     server: https://kubernetes.default.svc
+    namespace: tempo
   source:
-    repoURL: https://github.com/lgtmstack-pixel/Grafana.git
-    path: tempo
-    targetRevision: main
+    repoURL: https://grafana.github.io/helm-charts
+    chart: tempo
+    targetRevision: 1.9.0
     helm:
       valueFiles:
         - values.yaml
-  project: default
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
