@@ -6,16 +6,42 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/lgtmstack-pixel/Grafana  # Your Git repo
-    targetRevision: main  # Or your branch
-    path: loki  # Directory containing application.yaml and values.yaml
+    repoURL: https://github.com/lgtmstack-pixel/Grafana  # Official Helm repo
+    chart: loki
+    targetRevision: 6.33.0  # Stable version without the error
     helm:
       releaseName: loki
-      valueFiles:
-        - values.yaml  # References the file above
+      valueFiles: []
+      values: |  # Inline values for simplicity, or use separate file by changing repoURL to your Git
+        deploymentMode: Monolithic
+        minio:
+          enabled: false
+        loki:
+          auth_enabled: false
+          storage:
+            type: filesystem
+          schemaConfig:
+            configs:
+              - from: 2020-01-01
+                store: tsdb
+                object_store: filesystem
+                schema: v13
+                index:
+                  prefix: loki_index_
+                  period: 24h
+        monolithic:
+          enabled: true
+          replicas: 1
+          persistence:
+            enabled: true
+            size: 10Gi
+            storageClassName: local-path
+          service:
+            type: ClusterIP
+            port: 3100
   destination:
     server: https://kubernetes.default.svc
-    namespace: loki
+    namespace: logging
   syncPolicy:
     automated:
       prune: true
