@@ -30,8 +30,10 @@ persistence:
   size: 10Gi
   storageClassName: ""
 
-adminUser: admin
-adminPassword: admin123
+admin:
+  existingSecret: grafana-admin-secret
+  userKey: admin-user
+  passwordKey: admin-password
 
 grafana.ini:
   server:
