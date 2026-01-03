@@ -9,9 +9,9 @@ spec:
     server: https://kubernetes.default.svc
     namespace: tempo
   source:
-    repoURL: https://github.com/lgtmstack-pixel/Grafana.git
-    targetRevision: main
-    path: tempo
+    repoURL: https://github.com/lgtmstack-pixel/Grafana
+    targetRevision: main        # or master, confirm your branch name
+    path: tempo                 # folder with Chart.yaml + values.yaml
   syncPolicy:
     automated:
       prune: true
