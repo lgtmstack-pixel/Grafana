@@ -1,0 +1,34 @@
+server:
+  enabled: true
+  retention: "15d"
+
+  service:
+    type: NodePort
+    port: 9090
+
+  persistentVolume:
+    enabled: true
+    size: 20Gi
+    storageClass: local-path
+
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 15s
+
+  extraScrapeConfigs: |
+    - job_name: "grafana-agent"
+      static_configs:
+        - targets:
+            - grafana-agent.monitoring.svc.cluster.local:12345
+
+alertmanager:
+  enabled: false
+
+pushgateway:
+  enabled: false
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
