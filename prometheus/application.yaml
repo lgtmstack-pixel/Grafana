@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus
-    targetRevision: 25.21.0
+    repoURL: https://github.com/YOUR_ORG/prometheus-gitops.git
+    targetRevision: main
+    path: prometheus
     helm:
       valueFiles:
         - values.yaml
