@@ -29,18 +29,7 @@ prometheus:
               - grafana-agent.monitoring.svc.cluster.local:12345
 
 alertmanager:
-  enabled: true
-
-  alertmanagerSpec:
-    replicas: 1
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: local-path
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 5Gi
+  enabled: false
 
 
   pushgateway:
