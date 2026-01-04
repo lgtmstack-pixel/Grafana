@@ -1,38 +1,37 @@
-server:
-  enabled: true
-
-  replicaCount: 1   # <-- explicitly force ONE Prometheus pod
-
-  retention: "15d"
-
-  service:
-    type: NodePort
-    port: 9090
-    nodePort: 30090   # optional; remove if you want auto-assigned
-
-  persistentVolume:
+prometheus:
+  server:
     enabled: true
-    size: 10Gi
-    storageClass: local-path
+    replicaCount: 1
+    retention: "15d"
 
-  global:
-    scrape_interval: 15s
-    evaluation_interval: 15s
+    service:
+      type: NodePort
+      port: 9090
+      nodePort: 30090
 
-  extraScrapeConfigs: |
-    - job_name: "grafana-agent"
-      static_configs:
-        - targets:
-            - grafana-agent.monitoring.svc.cluster.local:12345
+    persistentVolume:
+      enabled: true
+      size: 10Gi
+      storageClass: local-path
 
-alertmanager:
-  enabled: false   # no alertmanager pod
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
 
-pushgateway:
-  enabled: false   # no pushgateway pod
+    extraScrapeConfigs: |
+      - job_name: "grafana-agent"
+        static_configs:
+          - targets:
+              - grafana-agent.monitoring.svc.cluster.local:12345
 
-kubeStateMetrics:
-  enabled: true    # 1 deployment pod
+  alertmanager:
+    enabled: false
 
-nodeExporter:
-  enabled: true    # DaemonSet (1 pod per node — EXPECTED)
+  pushgateway:
+    enabled: false
+
+  kubeStateMetrics:
+    enabled: true
+
+  nodeExporter:
+    enabled: true
