@@ -13,6 +13,9 @@ spec:
     helm:
       valueFiles:
         - values.yaml
+      parameters:
+        - name: namespaceOverride
+          value: prometheus
 
   destination:
     server: https://kubernetes.default.svc
@@ -24,4 +27,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-
+      - PruneLast=true
