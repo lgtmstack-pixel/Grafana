@@ -31,13 +31,12 @@ prometheus:
 alertmanager:
   enabled: true
 
+  service:
+    type: NodePort
+    nodePort: 30900
+
   alertmanagerSpec:
     replicas: 1
-
-    service:
-      type: NodePort
-      nodePort: 30900
-
     storage:
       volumeClaimTemplate:
         spec:
@@ -46,6 +45,7 @@ alertmanager:
           resources:
             requests:
               storage: 5Gi
+
 
   pushgateway:
     enabled: false
