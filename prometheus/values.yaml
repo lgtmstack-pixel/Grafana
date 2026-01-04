@@ -28,8 +28,11 @@ prometheus:
           - targets:
               - grafana-agent.monitoring.svc.cluster.local:12345
 
-  alertmanager:
-    enabled: false
+alertmanager:
+  enabled: true
+  service:
+    type: NodePort
+    nodePort: 30900
 
   pushgateway:
     enabled: false
