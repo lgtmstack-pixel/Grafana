@@ -1,36 +1,40 @@
-replicaCount: 1
-
-image:
-  repository: prom/alertmanager
-  tag: v0.27.0
-  pullPolicy: IfNotPresent
-
-service:
-  type: NodePort
-  port: 9093
-  nodePort: 30900
-
-persistence:
+alertmanager:
   enabled: true
-  size: 2Gi
-  storageClass: local-path
 
-alertmanagerConfig:
-  global:
-    resolve_timeout: 5m
+  replicaCount: 1
 
-  route:
-    receiver: "slack-notifications"
-    group_by:
-      - alertname
-      - namespace
-    group_wait: 30s
-    group_interval: 5m
-    repeat_interval: 4h
+  image:
+    repository: prom/alertmanager
+    tag: v0.27.0
+    pullPolicy: IfNotPresent
 
-  receivers:
-    - name: "slack-notifications"
-      slack_configs:
-        - api_url: "https://hooks.slack.com/services/T000/B000/XXXX"
-          channel: "#alerts"
-          send_resolved: true
+  service:
+    type: NodePort
+    port: 9093
+    nodePort: 30900
+
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: local-path
+
+  config:
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: slack-notifications
+      group_by:
+        - alertname
+        - namespace
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+
+    receivers:
+      - name: slack-notifications
+        slack_configs:
+          - api_url: https://hooks.slack.com/services/T000/B000/XXXX
+            channel: "#alerts"
+            send_resolved: true
+
