@@ -18,25 +18,19 @@ persistence:
 alertmanagerConfig:
   global:
     resolve_timeout: 5m
-    smtp_smarthost: "smtp.example.com:587"
-    smtp_from: "alerts@example.com"
-    smtp_auth_username: "alerts@example.com"
-    smtp_auth_password: "EMAIL_PASSWORD"
 
   route:
-    receiver: slack-notifications
-    group_by: ["alertname", "namespace"]
+    receiver: "slack-notifications"
+    group_by:
+      - alertname
+      - namespace
     group_wait: 30s
     group_interval: 5m
     repeat_interval: 4h
 
   receivers:
-    - name: slack-notifications
+    - name: "slack-notifications"
       slack_configs:
-        - api_url: https://hooks.slack.com/services/T000/B000/XXXX
+        - api_url: "https://hooks.slack.com/services/T000/B000/XXXX"
           channel: "#alerts"
           send_resolved: true
-
-    - name: email-notifications
-      email_configs:
-        - to: ops@example.com
