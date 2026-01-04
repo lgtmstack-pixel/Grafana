@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/<your-repo>
+    repoURL: https://github.com/lgtmstack-pixel/Grafana.git
     targetRevision: main
     path: alertmanager  # <-- directory containing your YAML
 
