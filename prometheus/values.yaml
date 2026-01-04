@@ -4,7 +4,7 @@ prometheus:
     replicaCount: 1
     retention: "15d"
 
-    # 🔴 REQUIRED FIX – ENABLE REMOTE WRITE RECEIVER
+    # REQUIRED – enable remote write receiver
     extraArgs:
       web.enable-remote-write-receiver: ""
 
@@ -22,21 +22,35 @@ prometheus:
       scrape_interval: 15s
       evaluation_interval: 15s
 
+    # 🔹 Alertmanager integration (CRITICAL)
+    alerting:
+      alertmanagers:
+        - scheme: http
+          static_configs:
+            - targets:
+                - alertmanager.monitoring.svc.cluster.local:9093
+
+    # 🔹 Enables Alertmanager button in Prometheus UI
+    additionalAlertManagerConfigs:
+      - static_configs:
+          - targets:
+              - alertmanager.monitoring.svc.cluster.local:9093
+
     extraScrapeConfigs: |
       - job_name: "grafana-agent"
         static_configs:
           - targets:
               - grafana-agent.monitoring.svc.cluster.local:12345
 
+# 🔴 Disable bundled Alertmanager (you use standalone GitOps chart)
 alertmanager:
   enabled: false
 
+pushgateway:
+  enabled: false
 
-  pushgateway:
-    enabled: false
+kubeStateMetrics:
+  enabled: true
 
-  kubeStateMetrics:
-    enabled: true
-
-  nodeExporter:
-    enabled: true
+nodeExporter:
+  enabled: true
