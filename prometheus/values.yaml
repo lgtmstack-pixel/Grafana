@@ -1,10 +1,14 @@
 server:
   enabled: true
+
+  replicaCount: 1   # <-- explicitly force ONE Prometheus pod
+
   retention: "15d"
 
   service:
     type: NodePort
     port: 9090
+    nodePort: 30090   # optional; remove if you want auto-assigned
 
   persistentVolume:
     enabled: true
@@ -22,13 +26,13 @@ server:
             - grafana-agent.monitoring.svc.cluster.local:12345
 
 alertmanager:
-  enabled: false
+  enabled: false   # no alertmanager pod
 
 pushgateway:
-  enabled: false
+  enabled: false   # no pushgateway pod
 
 kubeStateMetrics:
-  enabled: true
+  enabled: true    # 1 deployment pod
 
 nodeExporter:
-  enabled: true
+  enabled: true    # DaemonSet (1 pod per node — EXPECTED)
