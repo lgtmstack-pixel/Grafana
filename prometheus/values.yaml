@@ -31,10 +31,6 @@ prometheus:
 alertmanager:
   enabled: true
 
-  service:
-    type: NodePort
-    nodePort: 30900
-
   alertmanagerSpec:
     replicas: 1
     storage:
