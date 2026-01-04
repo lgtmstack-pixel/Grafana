@@ -1,6 +1,11 @@
 apiVersion: v2
 name: alertmanager
-description: Standalone Alertmanager (GitOps-friendly)
+description: Alertmanager Helm chart for GitOps deployment
 type: application
 version: 0.1.0
-appVersion: "0.27.0"
+
+dependencies:
+  - name: alertmanager
+    version: 1.13.2
+    repository: https://prometheus-community.github.io/helm-charts
+
