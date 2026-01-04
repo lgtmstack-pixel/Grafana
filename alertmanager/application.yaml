@@ -10,7 +10,9 @@ spec:
     repoURL: https://github.com/lgtmstack-pixel/Grafana.git
     targetRevision: main
     path: alertmanager  # <-- directory containing your YAML
-
+    helm:
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: default
