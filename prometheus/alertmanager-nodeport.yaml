@@ -2,12 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus-alertmanager-nodeport
-  namespace: prometheus
+  namespace: default
 spec:
   type: NodePort
   selector:
-    alertmanager: prometheus-alertmanager
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/name: alertmanager
   ports:
-    - port: 9093
-      targetPort: 9093
+    - name: http
+      port: 9093
+      targetPort: http
       nodePort: 30900
+
