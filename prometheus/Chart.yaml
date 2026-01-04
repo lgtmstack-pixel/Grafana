@@ -1,0 +1,5 @@
+apiVersion: v2
+name: prometheus-gitops
+description: GitOps wrapper for upstream Prometheus Helm chart
+type: application
+version: 0.1.0
