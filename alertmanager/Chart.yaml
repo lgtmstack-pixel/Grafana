@@ -1,12 +1,8 @@
 apiVersion: v2
-name: alertmanager
-description: Alertmanager Helm chart for GitOps deployment
+name: alertmanager-standalone
+description: Standalone Alertmanager deployed via Argo CD
 type: application
 version: 0.1.0
-
-dependencies:
-  - name: alertmanager
-    repository: https://prometheus-community.github.io/helm-charts
-    version: 0.27.0
+appVersion: "0.27.0"
 
 
