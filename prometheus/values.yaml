@@ -25,28 +25,23 @@ prometheus:
     # EXTRA SCRAPE CONFIGS (Grafana Agent + Blackbox)
     # --------------------------------------------------
     extraScrapeConfigs: |
-  - job_name: "grafana-agent"
-    static_configs:
-      - targets:
-          - grafana-agent.monitoring.svc.cluster.local:12345
+      - job_name: "grafana-agent"
+        static_configs:
+          - targets:
+              - grafana-agent.monitoring.svc.cluster.local:12345
 
-  - job_name: "blackbox-k8s"
-    metrics_path: /probe
-    params:
-      module: [tcp_connect]
-    static_configs:
-      - targets:
-          - google.com:443
-          - smtp.gmail.com:587
-          - kubernetes.default.svc.cluster.local:443
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__address__]
-        target_label: instance
-      - target_label: __address__
-        replacement: blackbox-exporter-prometheus-blackbox-exporter.blackbox.svc.cluster.local:9115
-
+      - job_name: "blackbox-k8s"
+        metrics_path: /probe
+        params:
+          module: [tcp_connect]
+        static_configs:
+          - targets:
+              - blackbox-exporter-prometheus-blackbox-exporter.blackbox.svc.cluster.local:9115
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - target_label: __address__
+            replacement: blackbox-exporter-prometheus-blackbox-exporter.blackbox.svc.cluster.local:9115
 
   alertmanager:
     enabled: true
