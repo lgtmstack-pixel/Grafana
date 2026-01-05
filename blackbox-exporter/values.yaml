@@ -24,9 +24,16 @@ config:
 
 serviceMonitor:
   enabled: true
-  namespace: blackbox
+
+  # 🔴 Prometheus namespace (NOT blackbox)
+  namespace: default
+
   interval: 15s
   scrapeTimeout: 10s
+
+  # 🔴 Must match Prometheus Helm release label
+  labels:
+    release: prometheus
 
   relabelings:
     - sourceLabels: [__meta_kubernetes_node_name]
