@@ -3,7 +3,7 @@ grafana:
 
   image:
     repository: grafana/grafana
-    tag: 10.4.2
+    tag: 9.4.14
 
   service:
     type: NodePort
