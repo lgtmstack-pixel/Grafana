@@ -22,19 +22,19 @@ prometheus:
       scrape_interval: 15s
       evaluation_interval: 15s
 
-    # 🔹 Alertmanager integration (CRITICAL)
-    alerting:
-      alertmanagers:
-        - scheme: http
-          static_configs:
-            - targets:
-                - alertmanager.monitoring.svc.cluster.local:9093
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets:
+            - alertmanager.alertmanager.svc.cluster.local:9093
 
-    # 🔹 Enables Alertmanager button in Prometheus UI
-    additionalAlertManagerConfigs:
-      - static_configs:
-          - targets:
-              - alertmanager.monitoring.svc.cluster.local:9093
+# Enables Alertmanager button in Prometheus UI
+additionalAlertManagerConfigs:
+  - static_configs:
+      - targets:
+          - alertmanager.alertmanager.svc.cluster.local:9093
+
 
     extraScrapeConfigs: |
       - job_name: "grafana-agent"
