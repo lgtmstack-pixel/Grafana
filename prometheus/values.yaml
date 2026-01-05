@@ -45,6 +45,7 @@ additionalAlertManagerConfigs:
 # 🔴 Disable bundled Alertmanager (you use standalone GitOps chart)
 alertmanager:
   enabled: false
+  
 
 pushgateway:
   enabled: false
