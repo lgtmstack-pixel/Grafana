@@ -21,34 +21,74 @@ prometheus:
       scrape_interval: 15s
       evaluation_interval: 15s
 
-    # --------------------------------------------------
-    # EXTRA SCRAPE CONFIGS (Grafana Agent + Blackbox)
-    # --------------------------------------------------
+    ########################################
+    # EXTRA SCRAPE CONFIGS (IMPORTANT)
+    ########################################
     extraScrapeConfigs: |
+      #
+      # Grafana Agent (already working)
+      #
       - job_name: "grafana-agent"
         static_configs:
           - targets:
               - grafana-agent.monitoring.svc.cluster.local:12345
 
-      - job_name: "blackbox-k8s"
+      #
+      # BLACKBOX EXPORTER (K8s)
+      #
+      - job_name: "blackbox-k8s-tcp"
         metrics_path: /probe
         params:
           module: [tcp_connect]
         static_configs:
           - targets:
-              - blackbox-exporter-prometheus-blackbox-exporter.blackbox.svc.cluster.local:9115
+              # SMTP
+              - smtp.gmail.com:587
+              # HTTPS
+              - google.com:443
+              # Kubernetes API
+              - kubernetes.default.svc.cluster.local:443
+              # Example DB
+              - postgres.default.svc.cluster.local:5432
         relabel_configs:
           - source_labels: [__address__]
             target_label: __param_target
+          - source_labels: [__address__]
+            target_label: instance
           - target_label: __address__
             replacement: blackbox-exporter-prometheus-blackbox-exporter.blackbox.svc.cluster.local:9115
 
+      #
+      # BLACKBOX HTTP CHECKS
+      #
+      - job_name: "blackbox-k8s-http"
+        metrics_path: /probe
+        params:
+          module: [http_2xx]
+        static_configs:
+          - targets:
+              - https://google.com
+              - https://grafana.com
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__address__]
+            target_label: instance
+          - target_label: __address__
+            replacement: blackbox-exporter-prometheus-blackbox-exporter.blackbox.svc.cluster.local:9115
+
+  ########################################
+  # ALERTMANAGER
+  ########################################
   alertmanager:
     enabled: true
     service:
       type: NodePort
       nodePort: 30903
 
+  ########################################
+  # OTHER COMPONENTS
+  ########################################
   pushgateway:
     enabled: false
 
@@ -58,6 +98,9 @@ prometheus:
   nodeExporter:
     enabled: true
 
+  ########################################
+  # ALERT RULES (TEST)
+  ########################################
   serverFiles:
     alerting_rules.yml:
       groups:
