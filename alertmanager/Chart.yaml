@@ -1,8 +1,0 @@
-apiVersion: v2
-name: alertmanager-standalone
-description: Standalone Alertmanager deployed via Argo CD
-type: application
-version: 0.1.0
-appVersion: "0.27.0"
-
-
