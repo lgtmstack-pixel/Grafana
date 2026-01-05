@@ -29,6 +29,15 @@ grafana:
     enabled: true
     size: 10Gi
 
+  # FIX: required for Grafana 7.x → 10.x upgrade (PVC permission issue)
+  securityContext:
+    runAsUser: 472
+    runAsGroup: 472
+    fsGroup: 472
+
+  initChownData:
+    enabled: true
+
   admin:
     existingSecret: grafana-admin-secret
     userKey: admin-user
@@ -39,3 +48,4 @@ grafana:
       root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
     security:
       allow_embedding: true
+
