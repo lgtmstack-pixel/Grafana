@@ -1,25 +1,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.alertmanager.name }}
-  labels:
-    app: {{ .Values.alertmanager.name }}
+  name: alertmanager
+  namespace: alertmanager
 spec:
-  serviceName: {{ .Values.alertmanager.name }}
-  replicas: {{ .Values.alertmanager.replicas }}
+  serviceName: alertmanager
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ .Values.alertmanager.name }}
+      app: alertmanager
   template:
     metadata:
       labels:
-        app: {{ .Values.alertmanager.name }}
+        app: alertmanager
     spec:
-      serviceAccountName: {{ .Values.alertmanager.name }}
       containers:
         - name: alertmanager
-          image: "{{ .Values.alertmanager.image.repository }}:{{ .Values.alertmanager.image.tag }}"
-          imagePullPolicy: {{ .Values.alertmanager.image.pullPolicy }}
+          image: prom/alertmanager:v0.27.0
           args:
             - "--config.file=/etc/alertmanager/alertmanager.yml"
             - "--storage.path=/alertmanager"
@@ -29,20 +26,18 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/alertmanager
-            - name: storage
+            - name: data
               mountPath: /alertmanager
-          resources:
-            {{- toYaml .Values.alertmanager.resources | nindent 12 }}
       volumes:
         - name: config
           configMap:
-            name: {{ .Values.alertmanager.name }}-config
+            name: alertmanager-config
   volumeClaimTemplates:
     - metadata:
-        name: storage
+        name: data
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes:
+          - ReadWriteOnce
         resources:
           requests:
-            storage: {{ .Values.alertmanager.persistence.size }}
-        storageClassName: {{ .Values.alertmanager.persistence.storageClass }}
+            storage: 2Gi
