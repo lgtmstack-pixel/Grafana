@@ -4,6 +4,7 @@ image:
   repository: prom/blackbox-exporter
   tag: v0.25.0
 
+# DaemonSet so exporter runs on all nodes
 kind: DaemonSet
 
 service:
@@ -21,20 +22,3 @@ config:
       timeout: 5s
       http:
         valid_status_codes: [200, 301, 302]
-
-serviceMonitor:
-  enabled: true
-
-  # 🔴 Prometheus namespace (NOT blackbox)
-  namespace: default
-
-  interval: 15s
-  scrapeTimeout: 10s
-
-  # 🔴 Must match Prometheus Helm release label
-  labels:
-    release: prometheus
-
-  relabelings:
-    - sourceLabels: [__meta_kubernetes_node_name]
-      targetLabel: node_name
