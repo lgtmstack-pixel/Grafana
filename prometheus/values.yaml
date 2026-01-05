@@ -27,13 +27,13 @@ alerting:
     - scheme: http
       static_configs:
         - targets:
-            - alertmanager.default.svc.cluster.local:9093
+            - alertmanager.alertmanager.svc.cluster.local:9093
 
 # Enables Alertmanager button in Prometheus UI
 additionalAlertManagerConfigs:
   - static_configs:
       - targets:
-          - alertmanager.default.svc.cluster.local:9093
+          - alertmanager.alertmanager.svc.cluster.local:9093
 
 
     extraScrapeConfigs: |
