@@ -22,18 +22,6 @@ prometheus:
       scrape_interval: 15s
       evaluation_interval: 15s
 
-alerting:
-  alertmanagers:
-    - scheme: http
-      static_configs:
-        - targets:
-            - alertmanager.alertmanager.svc.cluster.local:9093
-
-# Enables Alertmanager button in Prometheus UI
-additionalAlertManagerConfigs:
-  - static_configs:
-      - targets:
-          - alertmanager.alertmanager.svc.cluster.local:9093
 
 
     extraScrapeConfigs: |
@@ -44,7 +32,12 @@ additionalAlertManagerConfigs:
 
 # 🔴 Disable bundled Alertmanager (you use standalone GitOps chart)
 alertmanager:
-  enabled: false
+  enabled: true
+
+alertmanager:
+  service:
+    type: NodePort
+    nodePort: 30903
   
 
 pushgateway:
