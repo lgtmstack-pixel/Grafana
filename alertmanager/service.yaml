@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: alertmanager
   namespace: alertmanager
+  labels:
+    app: alertmanager
 spec:
   type: NodePort
   selector:
@@ -10,6 +12,7 @@ spec:
   ports:
     - name: web
       port: 9093
-      targetPort: 9093
+      targetPort: web
       nodePort: 30903
+
 
