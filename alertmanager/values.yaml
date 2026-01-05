@@ -1,33 +1,27 @@
 alertmanager:
-  enabled: true
+  name: alertmanager
+  replicas: 1
 
-  replicaCount: 1
-
-  statefulSet:
-    enabled: true
-
-  persistence:
-    enabled: true
-    storageClass: standard
-    accessModes:
-      - ReadWriteOnce
-    size: 2Gi
+  image:
+    repository: alertmanager
+    tag: v0.27.0
+    pullPolicy: IfNotPresent
 
   service:
     type: NodePort
     port: 9093
     nodePort: 30903
-    
+
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: local-path   # change if needed
+
   resources:
     requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 128Mi
     limits:
       cpu: 500m
       memory: 512Mi
 
-
-
-  podAnnotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "9093"
