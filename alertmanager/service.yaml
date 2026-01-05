@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.alertmanager.name }}
+  labels:
+    app: {{ .Values.alertmanager.name }}
+spec:
+  type: {{ .Values.alertmanager.service.type }}
+  ports:
+    - port: {{ .Values.alertmanager.service.port }}
+      targetPort: 9093
+      nodePort: {{ .Values.alertmanager.service.nodePort }}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.alertmanager.name }}
