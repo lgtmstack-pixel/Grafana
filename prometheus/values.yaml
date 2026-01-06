@@ -42,31 +42,7 @@ prometheus:
     enabled: true
 
   ########################################
-  # BLACKBOX EXPORTER (HELM-MANAGED)
-  ########################################
-  prometheus-blackbox-exporter:
-    enabled: true
 
-    image:
-      repository: prom/blackbox-exporter
-      tag: v0.25.0
-
-    service:
-      type: ClusterIP
-      port: 9115
-
-    config:
-      modules:
-        tcp_connect:
-          prober: tcp
-          timeout: 5s
-
-        http_2xx:
-          prober: http
-          timeout: 5s
-          http:
-            valid_http_versions: ["HTTP/1.1", "HTTP/2"]
-            valid_status_codes: []
 
   ########################################
   # PROMETHEUS CONFIG
@@ -86,45 +62,7 @@ prometheus:
             - targets:
                 - grafana-agent.monitoring.svc.cluster.local:12345
 
-        ####################################
-        # BLACKBOX TCP CHECKS
-        ####################################
-        - job_name: "blackbox-tcp"
-          metrics_path: /probe
-          params:
-            module: [tcp_connect]
-          static_configs:
-            - targets:
-                - smtp.gmail.com:587
-                - google.com:443
-                - kubernetes.default.svc.cluster.local:443
-                - postgres.default.svc.cluster.local:5432
-          relabel_configs:
-            - source_labels: [__address__]
-              target_label: __param_target
-            - source_labels: [__param_target]
-              target_label: instance
-            - target_label: __address__
-              replacement: prometheus-blackbox-exporter.default.svc.cluster.local:9115
-
-        ####################################
-        # BLACKBOX HTTP CHECKS
-        ####################################
-        - job_name: "blackbox-http"
-          metrics_path: /probe
-          params:
-            module: [http_2xx]
-          static_configs:
-            - targets:
-                - https://google.com
-                - https://grafana.com
-          relabel_configs:
-            - source_labels: [__address__]
-              target_label: __param_target
-            - source_labels: [__param_target]
-              target_label: instance
-            - target_label: __address__
-              replacement: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
+        
 
     ########################################
     # TEST ALERT RULE
