@@ -44,7 +44,7 @@ prometheus:
   ########################################
   # BLACKBOX EXPORTER (HELM-MANAGED)
   ########################################
-  blackboxExporter:
+  prometheus-blackbox-exporter:
     enabled: true
 
     image:
@@ -105,7 +105,7 @@ prometheus:
             - source_labels: [__param_target]
               target_label: instance
             - target_label: __address__
-              replacement: blackbox-exporter.monitoring.svc.cluster.local:9115
+              replacement: prometheus-blackbox-exporter.default.svc.cluster.local:9115
 
         ####################################
         # BLACKBOX HTTP CHECKS
@@ -124,7 +124,7 @@ prometheus:
             - source_labels: [__param_target]
               target_label: instance
             - target_label: __address__
-              replacement: blackbox-exporter.monitoring.svc.cluster.local:9115
+              replacement: prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115
 
     ########################################
     # TEST ALERT RULE
