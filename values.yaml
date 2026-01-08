@@ -29,7 +29,7 @@ grafana:
     enabled: true
     size: 10Gi
 
-  # FIX: required for Grafana 7.x → 10.x upgrade (PVC permission issue)
+  # Required for PVC permissions (Grafana 7+)
   securityContext:
     runAsUser: 472
     runAsGroup: 472
@@ -38,14 +38,42 @@ grafana:
   initChownData:
     enabled: true
 
+  # Admin credentials (already correct)
   admin:
     existingSecret: grafana-admin-secret
     userKey: admin-user
     passwordKey: admin-password
 
+  # =========================
+  # SMTP CONFIG (ALERTING)
+  # =========================
   grafana.ini:
     server:
       root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
+
     security:
       allow_embedding: true
 
+    smtp:
+      enabled: true
+      host: smtp.gmail.com:587
+      from_address: pradyumnadash287@gmail.com
+      from_name: Grafana Alerts
+      skip_verify: true
+      startTLS_policy: OpportunisticStartTLS
+      user: ${GF_SMTP_USER}
+      password: ${GF_SMTP_PASSWORD}
+
+  # Inject SMTP creds from Kubernetes Secret
+  env:
+    GF_SMTP_USER:
+      valueFrom:
+        secretKeyRef:
+          name: grafana-smtp-secret
+          key: smtp-user
+
+    GF_SMTP_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: grafana-smtp-secret
+          key: smtp-password
