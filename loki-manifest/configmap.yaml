@@ -34,9 +34,7 @@ data:
       engine:
         timeout: 5m
 
-    # 🔴 DISABLE QUERY SCHEDULER COMPLETELY
-    query_scheduler:
-      enabled: false
+
 
     frontend:
       compress_responses: true
@@ -68,5 +66,3 @@ data:
     limits_config:
       allow_structured_metadata: true
 
-    ruler:
-      enabled: false
